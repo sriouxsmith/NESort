@@ -7,5 +7,6 @@
 void nes_wait_frame(void);
 void nes_set_ppu_ctrl(uint8_t);
 void nes_set_ppu_mask(uint8_t);
+void nes_clear_nametables(void);
 
 #endif

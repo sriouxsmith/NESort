@@ -58,6 +58,53 @@ loop:
 	rts
 .endproc
 
+;
+; void nes_clear_nametables(void);
+;
+.c_proc nes_clear_nametables
+	ldx	#0
+	stx	PPU_MASK        ; hard disable drawing
+	bit	PPU_STATUS      ; reset addr latch
+
+	lda	#$20            ; left
+		                ; tile = 0
+	ldy	#%00000000      ; plain attributes
+	jsr	clear
+
+	lda	#$24            ; right
+	ldx	#' '            ; ASCII space
+	ldy	#%01010101      ; all attributes second palette
+
+clear:
+	; A: hi nametable address, X: fill tile, Y: attribute
+	sta	PPU_ADDR
+	lda	#$00
+	sta	PPU_ADDR
+
+	tya
+	pha	                ; save attribute
+
+	txa	                ; put fill tile in A
+	ldx	#192
+	ldy	#4
+nt_loop:
+	sta	PPU_DATA	; 3 * 256 + 192 = 960 bytes
+	dex
+	bne	nt_loop
+	dey
+	bne	nt_loop
+
+	pla	                ; get attribute
+
+	ldx	#64
+at_loop:
+	sta	PPU_DATA
+	dex
+	bne	at_loop
+
+	rts
+.endproc
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 ;
