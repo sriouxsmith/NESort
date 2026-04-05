@@ -41,6 +41,24 @@ loop:
 .endproc
 
 ;
+; void nes_set_ppu_ctrl(uint8_t);
+;
+.c_proc nes_set_ppu_ctrl
+	ora	#%10000000 ; NMI should always be enabled
+	and	#%10111111 ; The master/slave bit should always be clear
+	sta	ctrl_copy
+	rts
+.endproc
+
+;
+; void nes_set_ppu_mask(uint8_t);
+;
+.c_proc nes_set_ppu_mask
+	sta	mask_copy
+	rts
+.endproc
+
+;
 ; Runs at the end of every frame.
 ;
 .public_proc NMI
