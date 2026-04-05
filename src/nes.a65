@@ -14,6 +14,10 @@
 	.var	ctrl_copy
 	.var	mask_copy
 
+	.var	vram_update_len
+	.var	vram_update_src, 2
+	.var	vram_update_dest, 2
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "OAM"
@@ -139,7 +143,24 @@ at_loop:
 	sta	PPU_MASK ; 0 (disable drawing for now)
 
 	bit	PPU_STATUS
-	; drawing routine goes here
+	ldx	vram_update_len
+	beq	skip_generic_update
+
+	; write VRAM address
+	lda	vram_update_dest+1
+	sta	PPU_ADDR
+	lda	vram_update_dest
+	sta	PPU_ADDR
+
+	ldy	#0
+update_loop:
+	lda	(vram_update_src),y
+	iny
+	sta	PPU_DATA
+	dex
+	bne	update_loop
+	
+skip_generic_update:
 
 	lda	ctrl_copy
 	sta	PPU_CTRL
