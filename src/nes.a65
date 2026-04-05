@@ -29,6 +29,18 @@ spr_data:
 .segment "CODE"
 
 ;
+; void nes_wait_frame(void);
+;
+.c_proc nes_wait_frame
+	lda	#0
+	sta	is_frame_overrun
+loop:
+	lda	is_frame_overrun
+	beq	loop
+	rts
+.endproc
+
+;
 ; Runs at the end of every frame.
 ;
 .public_proc NMI

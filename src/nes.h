@@ -4,4 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+void nes_wait_frame(void);
+
 #endif
