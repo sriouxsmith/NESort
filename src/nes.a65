@@ -1,0 +1,28 @@
+;
+; All things related to interacting with the NES hardware.
+;
+
+.include "nes.h65"
+.include "macro.h65"
+
+.segment "CODE"
+
+;
+; Runs at the end of every frame.
+;
+.public_proc NMI
+	pha
+	txa
+	pha
+	tya
+	pha
+
+	; stub
+
+	pla
+	tay
+	pla
+	tax
+	pla
+	rti
+.endproc
