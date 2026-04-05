@@ -159,6 +159,8 @@ update_loop:
 	sta	PPU_DATA
 	dex
 	bne	update_loop
+
+	stx	vram_update_len ; 0; disable until needed again
 	
 skip_generic_update:
 
