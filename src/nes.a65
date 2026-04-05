@@ -58,6 +58,18 @@ loop:
 	rts
 .endproc
 
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+;
+; Initialize the PPU registers and variables so that NMI will fire.
+;
+.public_proc nes_init
+	lda	#%10000000
+	sta	ctrl_copy
+	sta	PPU_CTRL
+	rts
+.endproc
+
 ;
 ; Runs at the end of every frame.
 ;

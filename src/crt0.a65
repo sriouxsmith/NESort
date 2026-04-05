@@ -1,7 +1,7 @@
 .import __PRGSIZE__, __CHRSIZE__, __INESMAPPER__, __MIRRORING__
 
 .importzp ptr1, c_sp
-.import NMI, copydata
+.import nes_init, NMI, copydata
 .import _main
 
 .include "nes.h65"
@@ -56,6 +56,7 @@ clr:
 	stx	c_sp+1     ; C stack pointer $0700
 	jsr	copydata
 
+	jsr	nes_init
 	jmp	_main
 .endproc
 
