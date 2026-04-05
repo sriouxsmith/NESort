@@ -1,0 +1,68 @@
+.import __PRGSIZE__, __CHRSIZE__, __INESMAPPER__, __MIRRORING__
+
+.importzp ptr1, c_sp
+.import NMI, copydata
+
+.include "nes.h65"
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+.segment "HEADER"
+
+	.byte	"NES", $1a
+	.byte	<__PRGSIZE__
+	.byte	<__CHRSIZE__
+	.byte	(((<__INESMAPPER__&15)<<4))|<__MIRRORING__
+	.byte	(<__INESMAPPER__&240)
+	.byte	$00, $00, $00, $00, $00, $00, $00, $00
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+.export __STARTUP__: absolute = 1
+.segment "STARTUP"
+
+;
+; True entry point of the program
+;
+.proc RESET
+	lda	#%00000000
+	sta	PPU_CTRL
+	sta	PPU_MASK
+
+	sei
+	cld
+	ldx	#$ff
+	txs
+
+wait:
+	bit	PPU_STATUS
+	bpl	wait       ; VBlank yet?
+	inx	           ; X -> 0 first time; go twice
+	beq	wait
+
+	tay
+	sta	ptr1
+	ldx	#>$700
+	stx	ptr1+1     ; $0700
+clr:
+	sta	(ptr1),y
+	iny
+	bne	clr        ; one page
+	dec	ptr1+1
+	bpl	clr        ; down to $0000
+
+	sta	c_sp
+	stx	c_sp+1     ; C stack pointer $0700
+	jsr	copydata
+
+l:
+	jmp	l
+.endproc
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+.segment "VECTORS"
+
+	.word   RESET
+	.word   RESET
+	.word   RESET
