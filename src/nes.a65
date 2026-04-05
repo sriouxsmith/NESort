@@ -7,6 +7,12 @@
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
+.segment "ZEROPAGE"
+
+	.var	is_frame_overrun
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
 .segment "CODE"
 
 ;
@@ -19,7 +25,12 @@
 	tya
 	pha
 
-	; stub
+	; if the frame isn't over yet, don't do anything
+	lda	is_frame_overrun
+	bne	abort
+	inc	is_frame_overrun
+
+abort:
 
 	pla
 	tay
