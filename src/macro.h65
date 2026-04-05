@@ -1,0 +1,44 @@
+;
+; A macro pack for quick-exporting variables, procedures, C functions etc.
+;
+
+.feature leading_dot_in_identifiers
+
+.macro .public_proc name
+	.export name
+	.proc name
+.endmacro
+
+.macro .c_proc name
+	.export name
+	.export .ident(.sprintf("_%s", .string(name))) := name
+	.proc name
+.endmacro
+
+.macro .var name, len
+.ifnblank len
+	name: .res len
+.else
+	name: .res 1
+.endif
+.endmacro
+
+.macro .public_var name, len
+	.var	name, len
+	
+.if .addrsize(name) = 1
+	.exportzp name
+.else
+	.export name
+.endif
+.endmacro
+
+.macro .c_var name, len
+	.public_var name, len
+
+.if .addrsize(name) = 1
+	.exportzp .ident(.sprintf("_%s", .string(name))) := name
+.else
+	.export .ident(.sprintf("_%s", .string(name))) := name
+.endif
+.endmacro
