@@ -2,6 +2,7 @@
 
 .importzp ptr1, c_sp
 .import NMI, copydata
+.import _main
 
 .include "nes.h65"
 
@@ -55,8 +56,7 @@ clr:
 	stx	c_sp+1     ; C stack pointer $0700
 	jsr	copydata
 
-l:
-	jmp	l
+	jmp	_main
 .endproc
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
