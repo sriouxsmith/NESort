@@ -11,6 +11,9 @@
 
 	.var	is_frame_overrun
 
+	.var	ctrl_copy
+	.var	mask_copy
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "OAM"
@@ -41,8 +44,19 @@ spr_data:
 	inc	is_frame_overrun
 
 	sta	OAM_ADDR ; 0
-	lda	#>spr_data
-	sta	OAM_DMA
+	ldx	#>spr_data
+	stx	OAM_DMA
+
+	sta	PPU_MASK ; 0 (disable drawing for now)
+
+	bit	PPU_STATUS
+	; drawing routine goes here
+
+	lda	ctrl_copy
+	sta	PPU_CTRL
+
+	lda	mask_copy
+	sta	PPU_MASK
 
 abort:
 
