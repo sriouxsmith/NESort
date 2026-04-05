@@ -13,6 +13,16 @@
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
+.segment "OAM"
+
+spr_data:
+	.var	spr_pos_y
+	.var	spr_tile
+	.var	spr_attr
+	.var	spr_pos_x
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
 .segment "CODE"
 
 ;
@@ -29,6 +39,10 @@
 	lda	is_frame_overrun
 	bne	abort
 	inc	is_frame_overrun
+
+	sta	OAM_ADDR ; 0
+	lda	#>spr_data
+	sta	OAM_DMA
 
 abort:
 
