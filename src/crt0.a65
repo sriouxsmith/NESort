@@ -67,3 +67,9 @@ clr:
 	.word   NMI
 	.word   RESET
 	.word   RESET
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+.segment "CHR"
+
+	.incbin "../assets/gfx.chr"
