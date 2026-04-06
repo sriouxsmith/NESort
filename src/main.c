@@ -1,5 +1,7 @@
 #include "nes.h"
 
+#include "sortpicker.h"
+
 const uint8_t palette[] = {
 	0x0f, 0x00, 0x10, 0x30,
 	0x0f, 0x29, 0x27, 0x30,
@@ -13,8 +15,13 @@ const uint8_t palette[] = {
 };
 
 void main(void) {
+	static SortFunction sort;
+
 	nes_set_vram_update(32, palette, 0x3f00);
 	nes_wait_frame();
 
-	while (1) nes_wait_frame();
+	while (1) {
+		sort = sortpicker_run();
+		while (1) nes_wait_frame();
+	}
 }
