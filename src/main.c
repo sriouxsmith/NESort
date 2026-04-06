@@ -20,8 +20,12 @@ void main(void) {
 	static SortFunction sort;
 	static Pipeline pipeline;
 
+	nes_set_ppu_ctrl(0x18);
+	nes_set_ppu_mask(0);
 	nes_set_vram_update(32, palette, 0x3f00);
 	nes_wait_frame();
+	nes_clear_nametable();
+	nes_set_ppu_mask(0x1e);
 
 	while (1) {
 		sort = sortpicker_run();
