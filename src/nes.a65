@@ -177,6 +177,8 @@ update_loop:
 	bne	update_loop
 
 	stx	vram_update_len ; 0; disable until needed again
+	stx	PPU_ADDR
+	stx	PPU_ADDR
 	
 skip_generic_update:
 
