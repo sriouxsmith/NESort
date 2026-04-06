@@ -44,3 +44,13 @@ clear_line:
 	++line;
 }
 
+void text_wait_write(const char *text) {
+	static uint8_t i;
+
+	text_init(text);
+
+	for (i = 0; i < TEXT_MAX_LINES; ++i) {
+		text_update();
+		nes_wait_frame();
+	}
+}

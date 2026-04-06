@@ -8,5 +8,6 @@
 
 void text_init(const char *text);
 void text_update(void);
+void text_wait_write(const char *text);
 
 #endif
