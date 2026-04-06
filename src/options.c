@@ -10,8 +10,8 @@ const char options_text[] =
 	"   Distribution:\n"
 	"   Shuffle:\n"
 	"\n"
-	"Show Aux.:\n"
-	"Speed:\n"
+	"   Show Aux.:\n"
+	"   Speed:\n"
 	"\n"
 	"  [Reset]   [Generate Seed]\n"
 	"\n"
@@ -25,6 +25,7 @@ const char options_text[] =
 	"pause, or up & down to change\n"
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
+
 
 bool options_run(Pipeline *p) {
 	return false;
