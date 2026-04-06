@@ -5,6 +5,8 @@
 .include "nes.h65"
 .include "macro.h65"
 
+.importzp tmp1
+
 .import popa, popax
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
@@ -124,6 +126,30 @@ at_loop:
 	sta	vram_update_len
 	rts
 .endproc
+
+;
+; Stolen from https://www.nesdev.org/wiki/Controller_reading_code
+; uint8_t nes_get_buttons(void);
+;
+.c_proc nes_get_buttons
+	buttons = tmp1
+
+	lda	#%00000001
+	sta	JOYPAD_P1       ; set strobe bit
+	sta	buttons         ; init ring counter
+	lsr	                ; -> 0
+	sta	JOYPAD_P1       ; stop strobing
+loop:
+	lda	JOYPAD_P1
+	lsr
+	rol	buttons         ; pull bit into the button cache
+	bcc	loop            ; until ring counter bit moves into CARRY
+
+	lda	buttons
+	ldx	#0
+	rts
+.endproc
+
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
