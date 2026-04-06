@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+extern uint8_t nes_vram_buffer[32];
+
 void nes_wait_frame(void);
 void nes_set_ppu_ctrl(uint8_t);
 void nes_set_ppu_mask(uint8_t);
