@@ -22,6 +22,8 @@
 	.var	vram_update_src, 2
 	.var	vram_update_dest, 2
 
+	.var	buttons
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "OAM"
@@ -107,10 +109,11 @@ loop:
 
 ;
 ; Stolen from https://www.nesdev.org/wiki/Controller_reading_code
-; uint8_t nes_get_buttons(void);
+; uint8_t nes_get_new_buttons(void);
 ;
-.c_proc nes_get_buttons
-	buttons = tmp1
+.c_proc nes_get_new_buttons
+	lda	buttons
+	pha	                ; push last state
 
 	lda	#%00000001
 	sta	JOYPAD_P1       ; set strobe bit
@@ -123,7 +126,9 @@ loop:
 	rol	buttons         ; pull bit into the button cache
 	bcc	loop            ; until ring counter bit moves into CARRY
 
-	lda	buttons
+	pla
+	eor	#%11111111
+	and	buttons         ; use previous frame's press as a mask
 	ldx	#0
 	rts
 .endproc
