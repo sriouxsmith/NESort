@@ -13,6 +13,8 @@
 #define NES_BUTTON_LEFT   0x02
 #define NES_BUTTON_RIGHT  0x01
 
+#define nes_nametable_addr(x, y) (0x2000 + ((y) << 5) + (x))
+
 extern uint8_t nes_vram_buffer[32];
 
 void nes_wait_frame(void);
