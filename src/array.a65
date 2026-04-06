@@ -1,0 +1,50 @@
+.include "nes.h65"
+.include "macro.h65"
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+.segment "ZEROPAGE"
+
+	.var	update_speed
+	.var	is_aux_visible
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+.segment "CODE"
+
+;
+; uint8_t arr_get_update_speed(void);
+;
+.c_proc arr_get_update_speed
+	lda	update_speed
+	ldx	#0
+	rts
+.endproc
+
+;
+; void arr_set_update_speed(uint8_t);
+;
+.c_proc arr_set_update_speed
+	cmp	#0
+	beq	no_set
+	sta	update_speed
+no_set:
+	rts
+.endproc
+
+;
+; bool arr_is_aux_visible(void);
+;
+.c_proc arr_is_aux_visible
+	lda	is_aux_visible
+	ldx	#0
+	rts
+.endproc
+
+;
+; void arr_set_aux_visible(bool);
+;
+.c_proc arr_set_aux_visible
+	sta	is_aux_visible
+	rts
+.endproc
