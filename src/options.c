@@ -1,5 +1,6 @@
 #include "options.h"
 #include "text.h"
+#include "array.h"
 
 const char options_text[] =
 	"           OPTIONS\n"
@@ -29,7 +30,10 @@ const char options_text[] =
 
 
 void options_init(Pipeline *p) {
-
+	p->len = 120;
+	p->distincts = 120;
+	arr_set_aux_visible(false);
+	arr_set_update_speed(1);
 }
 
 bool options_run(Pipeline *p) {
