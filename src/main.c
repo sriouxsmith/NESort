@@ -27,6 +27,7 @@ void main(void) {
 	nes_clear_nametable();
 	nes_set_ppu_mask(0x1e);
 	nes_seed_rand(3141592654);
+	options_init(&pipeline);
 
 	while (1) {
 		sort = sortpicker_run();

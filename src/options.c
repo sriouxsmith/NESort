@@ -1,4 +1,5 @@
 #include "options.h"
+#include "text.h"
 
 const char options_text[] =
 	"           OPTIONS\n"
@@ -26,6 +27,10 @@ const char options_text[] =
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
 
+
+void options_init(Pipeline *p) {
+
+}
 
 bool options_run(Pipeline *p) {
 	return false;
