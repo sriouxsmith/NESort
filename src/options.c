@@ -1,6 +1,7 @@
 #include "options.h"
 #include "text.h"
 #include "array.h"
+#include "bcd.h"
 
 const char options_text[] =
 	"           OPTIONS\n"
@@ -28,6 +29,9 @@ const char options_text[] =
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
 
+uint8_t length_bcd[3];
+uint8_t uniques_bcd[3];
+uint8_t speed_bcd[3];
 
 void options_init(Pipeline *p) {
 	p->len = 120;
@@ -37,5 +41,23 @@ void options_init(Pipeline *p) {
 }
 
 bool options_run(Pipeline *p) {
-	return false;
+	static uint8_t buttons;
+
+	text_init(options_text);
+
+	bcd_from_binary(p->len, length_bcd);
+	bcd_from_binary(p->distincts, uniques_bcd);
+	bcd_from_binary(arr_get_update_speed(), speed_bcd);
+
+	while (1) {
+		(void)nes_get_rand8();
+
+		buttons = nes_get_new_buttons();
+
+		if (buttons & NES_BUTTON_SELECT)
+			return false;
+		
+		text_update();
+		nes_wait_frame();
+	}
 }
