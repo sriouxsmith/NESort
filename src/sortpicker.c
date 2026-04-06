@@ -535,6 +535,7 @@ SortFunction sortpicker_run(void) {
 	init();
 
 	while (1) {
+		(void)nes_get_rand8();
 		buttons = nes_get_new_buttons();
 
 		if (buttons & NES_BUTTON_START)
