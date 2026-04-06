@@ -5,6 +5,8 @@
 .include "nes.h65"
 .include "macro.h65"
 
+.import popa, popax
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "ZEROPAGE"
@@ -106,6 +108,20 @@ at_loop:
 	dex
 	bne	at_loop
 
+	rts
+.endproc
+
+;
+; void nes_set_vram_update(uint8_t len, uint16_t src, uint16_t dest);
+;
+.c_proc nes_set_vram_update
+	sta	vram_update_dest
+	stx	vram_update_dest+1
+	jsr	popax
+	sta	vram_update_src
+	stx	vram_update_src+1
+	jsr	popa
+	sta	vram_update_len
 	rts
 .endproc
 
