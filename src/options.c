@@ -54,7 +54,7 @@ bool options_run(Pipeline *p) {
 
 		buttons = nes_get_new_buttons();
 
-		if (buttons & NES_BUTTON_B)
+		if (buttons & NES_BUTTON_SELECT)
 			return false;
 		
 		text_update();
