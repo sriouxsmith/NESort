@@ -14,7 +14,7 @@ void text_update(void) {
 	static char c;
 	static uint8_t i;
 
-	if (line == TEXT_MAX_LINES - 1)
+	if (line == TEXT_MAX_LINES)
 		return;
 
 	if (is_text_done) {
