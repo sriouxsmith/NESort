@@ -3,7 +3,9 @@
 #include "array.h"
 #include "bcd.h"
 
-const char options_text[] =
+#define NUM_OPTIONS 9
+
+static const char options_text[] =
 	"           OPTIONS\n"
 	"\n"
 	"   Length:\n"
@@ -29,9 +31,17 @@ const char options_text[] =
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
 
-uint8_t length_bcd[3];
-uint8_t uniques_bcd[3];
-uint8_t speed_bcd[3];
+static uint8_t length_bcd[3];
+static uint8_t uniques_bcd[3];
+static uint8_t speed_bcd[3];
+
+static const struct {
+	uint8_t spr_x[NUM_OPTIONS];
+	uint8_t spr_y[NUM_OPTIONS];
+} options = {
+	{144, 144, 144, 144, 144, 144, 144,   8,  88},
+	{ 39,  47,  63,  71,  79,  95, 103, 119, 119}
+};
 
 void options_init(Pipeline *p) {
 	p->len = 120;
