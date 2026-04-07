@@ -523,7 +523,7 @@ static const char *const sort_text[] = {
 	"instances.\n"
 };
 
-uint8_t cur_index; // initialized to 0 on startup
+static uint8_t cur_index; // initialized to 0 on startup
 
 static void init(void) {
 	text_init(sort_text[cur_index]);
@@ -564,6 +564,7 @@ SortFunction sortpicker_run(void) {
 		}
 		
 		text_update();
+		nes_hide_spr(0);
 		nes_wait_frame();
 	}
 }

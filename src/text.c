@@ -51,6 +51,7 @@ void text_wait_write(const char *text) {
 
 	for (i = 0; i < TEXT_MAX_LINES; ++i) {
 		text_update();
+		nes_hide_spr(0);
 		nes_wait_frame();
 	}
 }
