@@ -195,6 +195,25 @@ loop:
 .endproc
 
 ;
+; void nes_hide_spr(uint8_t start_index);
+;
+.c_proc nes_hide_spr
+	and	#%11111100 ; must be a multiple of 4
+	tax
+	lda	#255
+loop:
+	sta	spr_pos_y,x
+	inx
+	inx
+	inx
+	inx
+	bne	loop
+	rts
+.endproc
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+;
 ; Initialize the PPU registers and variables so that NMI will fire.
 ;
 .public_proc nes_init

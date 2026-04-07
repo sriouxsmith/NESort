@@ -25,5 +25,7 @@ void nes_set_vram_update(uint8_t len, const uint8_t *src, uint16_t dest);
 uint8_t nes_get_new_buttons(void);
 void nes_seed_rand(uint32_t);
 uint8_t nes_get_rand8(void);
+void nes_hide_spr(uint8_t start_index);
+
 
 #endif
