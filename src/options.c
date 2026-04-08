@@ -31,10 +31,6 @@ static const char options_text[] =
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
 
-static uint8_t length_bcd[3];
-static uint8_t uniques_bcd[3];
-static uint8_t speed_bcd[3];
-
 static const struct {
 	uint8_t spr_x[NUM_OPTIONS];
 	uint8_t spr_y[NUM_OPTIONS];
@@ -43,6 +39,12 @@ static const struct {
 	{ 39,  47,  63,  71,  79,  95, 103, 119, 119}
 };
 
+static uint8_t length_bcd[3];
+static uint8_t uniques_bcd[3];
+static uint8_t speed_bcd[3];
+
+static uint8_t option_index;
+
 void options_init(Pipeline *p) {
 	p->len = 120;
 	p->distincts = 120;
@@ -50,10 +52,33 @@ void options_init(Pipeline *p) {
 	arr_set_update_speed(1);
 }
 
+static void handle_navigation(uint8_t buttons) {
+	if (buttons & NES_BUTTON_DOWN) {
+		++option_index;
+		if (option_index >= NUM_OPTIONS)
+			option_index = NUM_OPTIONS - 1;
+	} else if (buttons & NES_BUTTON_UP) {
+		--option_index;
+		if (option_index >= NUM_OPTIONS)
+			option_index = 0;
+	}
+}
+
+static void update_display(Pipeline *p) {
+	static uint8_t index;
+
+	index = nes_put_spr(options.spr_x[option_index],
+			options.spr_y[option_index],
+			0x7f, 0, 0);
+
+	nes_hide_spr(index);
+	nes_wait_frame();
+}
+
 bool options_run(Pipeline *p) {
 	static uint8_t buttons;
 
-	text_init(options_text);
+	text_wait_write(options_text);
 
 	bcd_from_binary(p->len, length_bcd);
 	bcd_from_binary(p->distincts, uniques_bcd);
@@ -66,8 +91,10 @@ bool options_run(Pipeline *p) {
 
 		if (buttons & NES_BUTTON_SELECT)
 			return false;
-		
-		text_update();
-		nes_wait_frame();
+		if (buttons & NES_BUTTON_START)
+			return true;
+
+		handle_navigation(buttons);
+		update_display(p);
 	}
 }
