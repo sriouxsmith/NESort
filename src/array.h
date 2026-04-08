@@ -20,5 +20,6 @@ void arr_set_aux_visible(bool);
 
 void arr_clear_updates(void);
 void arr_update_all(void);
+void arr_push_update(uint8_t col);
 
 #endif

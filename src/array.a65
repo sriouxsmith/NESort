@@ -212,6 +212,19 @@ pass:
 	jmp	arr_clear_updates
 .endproc
 
+;
+; void arr_push_update(uint8_t col);
+;
+.c_proc arr_push_update
+	ldx	update_loc_sp
+	sta	update_locs,x
+	dec	update_loc_sp
+	bpl	not_full        ; if >= 0, still some update slots to fill
+	jmp	arr_update_all  ; otherwise, draw everything and move on
+not_full:
+	rts
+.endproc
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 ;
