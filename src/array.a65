@@ -1,6 +1,8 @@
 .include "nes.h65"
 .include "macro.h65"
 
+.importzp tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "ZEROPAGE"
@@ -238,5 +240,231 @@ done:
 	beq	return
 	lda	#0             ; otherwise it's (0, 0)
 return:
+	rts
+.endproc
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+a_val = tmp1
+b_val = tmp2
+c_val = tmp3
+d_val = tmp4
+
+a_height = ptr1
+b_height = ptr1+1
+c_height = ptr2
+d_height = ptr2+1
+
+a_rem = ptr3
+b_rem = ptr3+1
+c_rem = ptr4
+d_rem = ptr4+1
+
+.macro put_update_row i, end
+.scope
+	lda	#0              ; empty row buffer
+	ldy	#i              ; load row (immediate)
+
+	cpy	a_height
+	bcs	partial_a       ; less than tile height of A?
+	ora	#%11000000      ; tile is full; OR mask
+partial_a:
+	bne	b               ; otherwise, are they the same?
+	ora	a_rem           ; OR the remainder mask instead
+
+b:
+	cpy	b_height
+	bcs	partial_b
+	ora	#%00110000
+partial_b:
+	bne	c
+	ora	b_rem
+
+c:
+	cpy	c_height
+	bcs	partial_c
+	ora	#%00001100
+partial_c:
+	bne	d
+	ora	c_rem
+
+d:
+	cpy	d_height
+	bcs	partial_d
+	ora	#%00000011
+partial_d:
+	bne	set_row
+	ora	d_rem
+
+set_row:
+	sta	update+(end-i)*10,x
+.endscope
+.endmacro
+
+.proc update_no_aux
+	ldx	#9
+next:
+	lda	update_locs,x
+	cmp	#30             ; aux or OOB, skip
+	bcc	in_bounds
+	lda	#60
+	sta	update_locs,x
+	dex
+	bpl	next
+	rts
+
+in_bounds:
+	asl
+	asl
+	tay	                ; * 4, use as index into array
+
+	lda	arr_main,y
+	sta	a_val
+	lda	arr_main+1,y
+	sta	b_val
+	lda	arr_main+2,y
+	sta	c_val
+	lda	arr_main+3,y
+	tay	                ; dump everything into variables
+
+	lda	tile_height,y
+	sta	d_height
+	lda	part_height,y
+	sta	d_rem           ; %......xx
+
+	ldy	c_val
+	lda	tile_height,y
+	sta	c_height
+	lda	part_height,y
+	asl
+	asl
+	sta	c_rem           ; %....xx..
+
+	ldy	b_val
+	lda	tile_height,y
+	sta	b_height
+	lda	part_height,y
+	asl
+	asl
+	asl
+	asl
+	sta	b_rem           ; %..xx....
+
+	ldy	a_val
+	lda	tile_height,y
+	sta	a_height
+	lda	part_height,y
+	lsr
+	ror
+	ror	                ; equivalent to ASL*6: %xx......
+	sta	a_rem           ; get the remainders and the tile heights
+
+	put_update_row	0, 23
+	put_update_row	1, 23
+	put_update_row	2, 23
+	put_update_row	3, 23
+	put_update_row	4, 23
+	put_update_row	5, 23
+	put_update_row	6, 23
+	put_update_row	7, 23
+	put_update_row	8, 23
+	put_update_row	9, 23
+	put_update_row	10, 23
+	put_update_row	11, 23
+	put_update_row	12, 23
+	put_update_row	13, 23
+	put_update_row	14, 23
+	put_update_row	15, 23
+	put_update_row	16, 23
+	put_update_row	17, 23
+	put_update_row	18, 23
+	put_update_row	19, 23
+	put_update_row	20, 23
+	put_update_row	21, 23
+	put_update_row	22, 23
+	put_update_row	23, 23
+
+	dex
+	bmi	end
+	jmp	next
+
+end:
+	rts
+.endproc
+
+.proc update_with_aux
+	ldx	#9
+next:
+	lda	update_locs,x
+	cmp	#60             ; OOB, skip
+	bcc	in_bounds
+	dex
+	bpl	next
+	rts
+
+in_bounds:
+	asl
+	asl
+	tay	                ; * 4, use as index into array
+
+	lda	arr_main,y
+	sta	a_val
+	lda	arr_main+1,y
+	sta	b_val
+	lda	arr_main+2,y
+	sta	c_val
+	lda	arr_main+3,y
+	tay	                ; dump everything into variables
+
+	lda	tile_height_aux,y
+	sta	d_height
+	lda	part_height_aux,y
+	sta	d_rem           ; %......xx
+
+	ldy	c_val
+	lda	tile_height_aux,y
+	sta	c_height
+	lda	part_height_aux,y
+	asl
+	asl
+	sta	c_rem           ; %....xx..
+
+	ldy	b_val
+	lda	tile_height_aux,y
+	sta	b_height
+	lda	part_height_aux,y
+	asl
+	asl
+	asl
+	asl
+	sta	b_rem           ; %..xx....
+
+	ldy	a_val
+	lda	tile_height_aux,y
+	sta	a_height
+	lda	part_height_aux,y
+	lsr
+	ror
+	ror	                ; equivalent to ASL*6: %xx......
+	sta	a_rem           ; get the remainders and the tile heights
+
+	put_update_row	0, 11
+	put_update_row	1, 11
+	put_update_row	2, 11
+	put_update_row	3, 11
+	put_update_row	4, 11
+	put_update_row	5, 11
+	put_update_row	6, 11
+	put_update_row	7, 11
+	put_update_row	8, 11
+	put_update_row	9, 11
+	put_update_row	10, 11
+	put_update_row	11, 11
+
+	dex
+	bmi	end
+	jmp	next
+
+end:
 	rts
 .endproc
