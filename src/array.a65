@@ -3,6 +3,8 @@
 
 .importzp tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 
+.import nes_wait_frame
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "ZEROPAGE"
@@ -193,6 +195,21 @@ loop:
 	dex
 	bpl	loop           ; fill it up (no need to reset the
 	rts	               ; values in the updates themselves)
+.endproc
+
+;
+; void arr_update_all(void);
+;
+.c_proc arr_update_all
+        lda     is_aux_visible
+        bne     run_with_aux
+        jsr     update_no_aux
+        jmp     pass
+run_with_aux:
+	jsr     update_with_aux
+pass:
+	jsr     nes_wait_frame
+        jmp     arr_clear_updates
 .endproc
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;

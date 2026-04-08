@@ -19,5 +19,6 @@ bool arr_is_aux_visible(void);
 void arr_set_aux_visible(bool);
 
 void arr_clear_updates(void);
+void arr_update_all(void);
 
 #endif
