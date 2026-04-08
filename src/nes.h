@@ -27,8 +27,7 @@ void nes_seed_rand(uint32_t);
 uint8_t nes_get_rand8(void);
 void nes_hide_spr(uint8_t start_index);
 // returns the next available sprite index
-uint8_t nes_put_spr(uint8_t x, uint8_t y, uint8_t tile,
-		uint8_t attr, uint8_t index);
-
+uint8_t nes_put_spr(uint8_t x, uint8_t y, uint8_t tile, uint8_t attr, uint8_t index);
+void nes_set_arr_renderer_enabled(bool);
 
 #endif

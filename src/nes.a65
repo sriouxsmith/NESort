@@ -239,6 +239,14 @@ loop:
 	rts
 .endproc
 
+;
+; void nes_set_arr_renderer_enabled(bool);
+;
+.c_proc nes_set_arr_renderer_enabled
+	sta	is_arr_renderer_enabled
+	rts
+.endproc
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 ;
