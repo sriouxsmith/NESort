@@ -36,7 +36,7 @@ void text_update(void) {
 
 clear_line:
 	for ( ; i < TEXT_MAX_LINE_WIDTH; ++i)
-		nes_vram_buffer[i] = ' ';
+		nes_vram_buffer[i] = 0;
 
 	nes_set_vram_update(TEXT_MAX_LINE_WIDTH, nes_vram_buffer,
 			nes_nametable_addr(1, line + 3));
