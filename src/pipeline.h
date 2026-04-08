@@ -14,4 +14,6 @@ typedef struct {
 	uint8_t distincts;
 } Pipeline;
 
+void pipeline_run(Pipeline *p);
+
 #endif

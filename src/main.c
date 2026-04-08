@@ -39,6 +39,6 @@ void main(void) {
 		}
 		if (!options_run(&pipeline))
 			continue;
-		while (1) nes_wait_frame();
+		pipeline_run(&pipeline);
 	}
 }
