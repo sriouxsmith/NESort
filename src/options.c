@@ -4,6 +4,7 @@
 #include "bcd.h"
 
 #define NUM_OPTIONS 9
+#define NUM_DISTRIBUTIONS 5
 
 static const char options_text[] =
 	"           OPTIONS\n"
@@ -31,6 +32,14 @@ static const char options_text[] =
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
 
+static const struct {
+	uint8_t l[NUM_DISTRIBUTIONS];
+	uint8_t r[NUM_DISTRIBUTIONS];
+} distribution_symbols = {
+	{0x04, 0x08, 0x0a, 0x0c, 0x06},
+	{0x05, 0x09, 0x0b, 0x0d, 0x07}
+};
+
 const uint8_t spr_x[NUM_OPTIONS] = {144, 144, 144, 144, 144, 144, 144, 8, 88};
 const uint8_t spr_y[NUM_OPTIONS] = { 39,  47,  63,  71,  79,  95, 103, 119, 119};
 
@@ -39,6 +48,7 @@ static uint8_t uniques_bcd[3];
 static uint8_t speed_bcd[3];
 
 static uint8_t option_index;
+static uint8_t distribution_index;
 
 void options_init(Pipeline *p) {
 	p->len = 120;
@@ -80,6 +90,14 @@ static void draw_seed(uint32_t seed) {
 	nes_set_vram_update(8, nes_vram_buffer, 0x2114);
 }
 
+static uint8_t draw_symbol(uint8_t left, uint8_t right, uint8_t y, uint8_t index) {
+	static uint8_t new_index;
+	new_index = index;
+	new_index = nes_put_spr(160, y, left & 0x7f, left >= 0x80, new_index);
+	new_index = nes_put_spr(168, y, right & 0x7f, right >= 0x80, new_index);
+	return new_index;
+}
+
 static void update_display(Pipeline *p) {
 	static uint8_t index;
 	index = nes_put_spr(spr_x[option_index], spr_y[option_index], 0x7f, 0, 0);
@@ -96,6 +114,10 @@ static void update_display(Pipeline *p) {
 		index = nes_put_spr(160, 95, 'n', 0, index);
 		index = nes_put_spr(168, 95, 'o', 0, index);
 	}
+
+	index = draw_symbol(distribution_symbols.l[distribution_index],
+			distribution_symbols.r[distribution_index],
+			71, index);
 
 	nes_hide_spr(index);
 
