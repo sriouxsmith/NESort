@@ -10,6 +10,19 @@
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
+.segment "BUFFERS"
+;
+; For now, the main array will be visualized on the top (instead of the bottom
+; as is traditional) in aux mode for simplicity. May be changed in future revisions.
+;
+
+	.c_var	arr_main, 120
+	.c_var	arr_aux,  120
+	.c_var	arr_ext0, 120
+	.c_var	arr_ext1, 120
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
 .segment "CODE"
 
 ;
