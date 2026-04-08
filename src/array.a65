@@ -23,6 +23,42 @@
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
+.segment "RODATA"
+
+; FIXME: These VRAM addresses have a dummy value at index 60 (no write) which
+; points to VRAM $0000. Since the VRAM update routine is cycle-timed, this is
+; a simple way of "ignoring" the data in these columns, but if SRAM is used
+; for the pattern tables (UNROM, etc.) this will destroy the first two tiles.
+
+; VRAM addresses for columns
+update_loc_lo:
+	.byte	$61, $62, $63, $64, $65, $66, $67
+	.byte	$68, $69, $6a, $6b, $6c, $6d, $6e, $6f
+	.byte	$70, $71, $72, $73, $74, $75, $76, $77
+	.byte	$78, $79, $7a, $7b, $7c, $7d, $7e
+
+	.byte	$e1, $e2, $e3, $e4, $e5, $e6, $e7
+	.byte	$e8, $e9, $ea, $eb, $ec, $ed, $ee, $ef
+	.byte	$f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7
+	.byte	$f8, $f9, $fa, $fb, $fc, $fd, $fe
+
+	.byte	$00 ; dummy
+
+update_loc_hi:
+	.byte	$20, $20, $20, $20, $20, $20, $20
+	.byte	$20, $20, $20, $20, $20, $20, $20, $20
+	.byte	$20, $20, $20, $20, $20, $20, $20, $20
+	.byte	$20, $20, $20, $20, $20, $20, $20
+
+	.byte	$21, $21, $21, $21, $21, $21, $21
+	.byte	$21, $21, $21, $21, $21, $21, $21, $21
+	.byte	$21, $21, $21, $21, $21, $21, $21, $21
+	.byte	$21, $21, $21, $21, $21, $21, $21
+
+	.byte	$00 ; dummy
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
 .segment "CODE"
 
 ;
