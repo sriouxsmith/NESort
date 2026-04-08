@@ -31,13 +31,8 @@ static const char options_text[] =
 	"the speed. To stop the sort,\n"
 	"press select while paused.";
 
-static const struct {
-	uint8_t spr_x[NUM_OPTIONS];
-	uint8_t spr_y[NUM_OPTIONS];
-} options = {
-	{144, 144, 144, 144, 144, 144, 144,   8,  88},
-	{ 39,  47,  63,  71,  79,  95, 103, 119, 119}
-};
+const uint8_t spr_x[NUM_OPTIONS] = {144, 144, 144, 144, 144, 144, 144, 8, 88};
+const uint8_t spr_y[NUM_OPTIONS] = { 39,  47,  63,  71,  79,  95, 103, 119, 119};
 
 static uint8_t length_bcd[3];
 static uint8_t uniques_bcd[3];
@@ -67,9 +62,7 @@ static void handle_navigation(uint8_t buttons) {
 static void update_display(Pipeline *p) {
 	static uint8_t index;
 
-	index = nes_put_spr(options.spr_x[option_index],
-			options.spr_y[option_index],
-			0x7f, 0, 0);
+	index = nes_put_spr(spr_x[option_index], spr_y[option_index], 0x7f, 0, 0);
 
 	nes_hide_spr(index);
 	nes_wait_frame();
