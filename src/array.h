@@ -18,4 +18,6 @@ void arr_set_update_speed(uint8_t);
 bool arr_is_aux_visible(void);
 void arr_set_aux_visible(bool);
 
+void arr_clear_updates(void);
+
 #endif

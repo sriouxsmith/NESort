@@ -8,6 +8,8 @@
 	.var	update_speed
 	.var	is_aux_visible
 
+	.var	update_loc_sp
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "BUFFERS"
@@ -175,6 +177,20 @@ no_set:
 .c_proc arr_set_aux_visible
 	sta	is_aux_visible
 	rts
+.endproc
+
+;
+; void arr_clear_updates(void);
+;
+.c_proc arr_clear_updates
+	lda	#60            ; dummy value
+	ldx	#9
+	stx	update_loc_sp
+loop:
+	sta	update_locs,x
+	dex
+	bpl	loop           ; fill it up (no need to reset the
+	rts	               ; values in the updates themselves)
 .endproc
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
