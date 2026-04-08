@@ -83,9 +83,20 @@ static void draw_seed(uint32_t seed) {
 static void update_display(Pipeline *p) {
 	static uint8_t index;
 	index = nes_put_spr(spr_x[option_index], spr_y[option_index], 0x7f, 0, 0);
+
 	index = bcd_render_as_spr(160, 39, index, 3, length_bcd);
 	index = bcd_render_as_spr(160, 47, index, 3, uniques_bcd);
 	index = bcd_render_as_spr(160, 104, index, 3, speed_bcd);
+
+	if (arr_is_aux_visible()) {
+		index = nes_put_spr(160, 95, 'y', 0, index);
+		index = nes_put_spr(168, 95, 'e', 0, index);
+		index = nes_put_spr(176, 95, 's', 0, index);
+	} else {
+		index = nes_put_spr(160, 95, 'n', 0, index);
+		index = nes_put_spr(168, 95, 'o', 0, index);
+	}
+
 	nes_hide_spr(index);
 
 	draw_seed(p->seed);
