@@ -45,6 +45,10 @@ void options_init(Pipeline *p) {
 	p->distincts = 120;
 	arr_set_aux_visible(false);
 	arr_set_update_speed(1);
+	p->seed = nes_get_rand8()
+		| ((uint32_t)nes_get_rand8() << 8)
+		| ((uint32_t)nes_get_rand8() << 16)
+		| ((uint32_t)nes_get_rand8() << 24);
 }
 
 static void handle_navigation(uint8_t buttons) {
