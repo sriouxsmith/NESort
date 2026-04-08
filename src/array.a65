@@ -3,6 +3,7 @@
 
 .importzp tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 
+.import popa
 .import nes_wait_frame
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
@@ -223,6 +224,64 @@ pass:
 	jmp	arr_update_all  ; otherwise, draw everything and move on
 not_full:
 	rts
+.endproc
+
+;
+; uint8_t arr_read(bool aux, uint8_t i);
+;
+.c_proc arr_read
+	tax
+	jsr	popa
+	cmp	#0
+	bne	aux
+	lda	arr_main,x
+	jmp	push_update
+aux:
+	lda	arr_main,x
+push_update:
+	pha	                 ; save
+
+	lda	#60
+	jsr	arr_push_update  ; stand-in for a better version of this
+
+	pla	                 ; get saved
+	ldx	#0
+	rts
+.endproc
+
+;
+; void arr_write(bool aux, uint8_t val, uint8_t i);
+;
+.c_proc arr_write
+	val = tmp1
+
+	tax
+
+	jsr	popa
+	sta	val
+
+	jsr	popa
+	cmp	#0
+	bne	aux
+
+	lda	tmp1
+	sta	arr_main,x
+	jmp	push_update
+
+aux:
+	txa
+	clc
+	adc	#120
+	tax
+
+	lda	val
+	sta	arr_main,x
+
+push_update:
+	txa
+	lsr
+	lsr
+	jmp	arr_push_update
 .endproc
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;

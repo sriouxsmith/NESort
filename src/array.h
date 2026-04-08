@@ -22,4 +22,7 @@ void arr_clear_updates(void);
 void arr_update_all(void);
 void arr_push_update(uint8_t col);
 
+uint8_t arr_read(bool aux, uint8_t i);
+void arr_write(bool aux, uint8_t val, uint8_t i);
+
 #endif
