@@ -141,6 +141,45 @@ part_height_aux:
 .segment "CODE"
 
 ;
+; uint8_t arr_get_update_speed(void);
+;
+.c_proc arr_get_update_speed
+	lda	update_speed
+	ldx	#0
+	rts
+.endproc
+
+;
+; void arr_set_update_speed(uint8_t);
+;
+.c_proc arr_set_update_speed
+	cmp	#0
+	beq	no_set
+	sta	update_speed
+no_set:
+	rts
+.endproc
+
+;
+; bool arr_is_aux_visible(void);
+;
+.c_proc arr_is_aux_visible
+	lda	is_aux_visible
+	ldx	#0
+	rts
+.endproc
+
+;
+; void arr_set_aux_visible(bool);
+;
+.c_proc arr_set_aux_visible
+	sta	is_aux_visible
+	rts
+.endproc
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+;
 ; Push the column updates to VRAM.
 ; Returns the Y scroll value on A. Since this is guaranteed to run past the
 ; end of VBlank if the aux array isn't visible, returning the offset is
@@ -183,42 +222,5 @@ done:
 	beq	return
 	lda	#0             ; otherwise it's (0, 0)
 return:
-	rts
-.endproc
-
-;
-; uint8_t arr_get_update_speed(void);
-;
-.c_proc arr_get_update_speed
-	lda	update_speed
-	ldx	#0
-	rts
-.endproc
-
-;
-; void arr_set_update_speed(uint8_t);
-;
-.c_proc arr_set_update_speed
-	cmp	#0
-	beq	no_set
-	sta	update_speed
-no_set:
-	rts
-.endproc
-
-;
-; bool arr_is_aux_visible(void);
-;
-.c_proc arr_is_aux_visible
-	lda	is_aux_visible
-	ldx	#0
-	rts
-.endproc
-
-;
-; void arr_set_aux_visible(bool);
-;
-.c_proc arr_set_aux_visible
-	sta	is_aux_visible
 	rts
 .endproc
