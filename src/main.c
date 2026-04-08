@@ -21,7 +21,6 @@ void main(void) {
 	static Pipeline pipeline;
 	static bool is_options_init;
 
-	nes_set_ppu_ctrl(0x18);
 	nes_set_ppu_mask(0);
 	nes_set_vram_update(32, palette, 0x3f00);
 	nes_wait_frame();
@@ -32,6 +31,7 @@ void main(void) {
 	is_options_init = false;
 
 	while (1) {
+		nes_set_ppu_ctrl(0x18);
 		sort = sortpicker_run();
 		if (!is_options_init) {
 			options_init(&pipeline);
