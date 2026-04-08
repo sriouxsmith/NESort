@@ -59,12 +59,30 @@ static void handle_navigation(uint8_t buttons) {
 	}
 }
 
+static void draw_seed(uint32_t seed) {
+	static uint32_t working_seed;
+	static uint8_t tile;
+	static uint8_t i;
+
+	working_seed = seed;
+	for (i = 0; i < 8; ++i) {
+		tile = (working_seed >> 28) & 0x0f;
+		tile += tile >= 10 ? 0x37 : 0x30;
+
+		nes_vram_buffer[i] = tile;
+		working_seed <<= 4;
+	}
+
+	nes_set_vram_update(8, nes_vram_buffer, 0x2114);
+}
+
 static void update_display(Pipeline *p) {
 	static uint8_t index;
 
 	index = nes_put_spr(spr_x[option_index], spr_y[option_index], 0x7f, 0, 0);
-
 	nes_hide_spr(index);
+
+	draw_seed(p->seed);
 	nes_wait_frame();
 }
 
