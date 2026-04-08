@@ -9,6 +9,8 @@
 
 .import popa, popax
 
+.import arr_render
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "ZEROPAGE"
@@ -17,6 +19,8 @@
 
 	.var	ctrl_copy
 	.var	mask_copy
+
+	.var	is_arr_renderer_enabled
 
 	.var	vram_update_len
 	.var	vram_update_src, 2
@@ -269,6 +273,13 @@ loop:
 	sta	PPU_MASK ; 0 (disable drawing for now)
 
 	bit	PPU_STATUS
+	lda	is_arr_renderer_enabled
+	beq	check_generic_update
+
+	jsr	arr_render
+	jmp	skip_generic_update
+
+check_generic_update:
 	ldx	vram_update_len
 	beq	skip_generic_update
 
@@ -287,13 +298,24 @@ update_loop:
 	bne	update_loop
 
 	stx	vram_update_len ; 0; disable until needed again
-	stx	PPU_ADDR
-	stx	PPU_ADDR
+	txa ; 0, use as Y scroll for next bit
 	
 skip_generic_update:
+	ldx	ctrl_copy
+	stx	PPU_CTRL
 
-	lda	ctrl_copy
-	sta	PPU_CTRL
+	;
+	; A little trick to set the scroll to (0, 0) regardless of when
+	; we stopped rendering. If we did not overrun the frame, A should
+	; be 0, and this will trigger the automatic scroll refresh with
+	; (0, 0) as anticipated. If we missed the start of the frame, A
+	; will hold the Y scroll value to start rendering from.
+	;
+	ldx	#0
+	stx	PPU_ADDR
+	sta	PPU_SCROLL
+	stx	PPU_SCROLL
+	stx	PPU_ADDR
 
 	lda	mask_copy
 	sta	PPU_MASK
