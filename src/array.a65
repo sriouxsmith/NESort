@@ -21,6 +21,45 @@
 	.c_var	arr_ext0, 120
 	.c_var	arr_ext1, 120
 
+.align 256
+
+; which columns to render
+; 0-29 = top; 30-59 = bottom; 60 = don't
+	.var	update_locs, 10
+
+;
+; Since the update will take a considerable portion of the frame, the update
+; is split into 24 arrays of size 10 (the maximum number of updates) instead
+; of 10 arrays of 24 as would be logical. This reduces loop logic slightly.
+;
+
+update:
+	.var	update0, 10
+	.var	update1, 10
+	.var	update2, 10
+	.var	update3, 10
+	.var	update4, 10
+	.var	update5, 10
+	.var	update6, 10
+	.var	update7, 10
+	.var	update8, 10
+	.var	update9, 10
+	.var	update10, 10
+	.var	update11, 10
+	.var	update12, 10
+	.var	update13, 10
+	.var	update14, 10
+	.var	update15, 10
+	.var	update16, 10
+	.var	update17, 10
+	.var	update18, 10
+	.var	update19, 10
+	.var	update20, 10
+	.var	update21, 10
+	.var	update22, 10
+	.var	update23, 10
+
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "RODATA"
@@ -60,6 +99,54 @@ update_loc_hi:
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "CODE"
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
+
+;
+; Push the column updates to VRAM.
+; Returns the Y scroll value on A. Since this is guaranteed to run past the
+; end of VBlank if the aux array isn't visible, returning the offset is
+; necessary to tell the PPU where to start drawing the picture (usually this
+; is done automatically at the start of VBlank).
+;
+.public_proc arr_render
+	lda	#%10001100
+	sta	PPU_CTRL   ; vertical drawing
+
+	ldx	#9
+next_update:
+	ldy	update_locs,x
+
+	lda	update_loc_hi,y
+	sta	PPU_ADDR
+	lda	update_loc_lo,y
+	sta	PPU_ADDR        ; set update address
+
+.repeat 12, I
+	lda	update+(I*10),x
+	sta	PPU_DATA        ; blit 12 bytes
+.endrepeat
+
+	lda	is_aux_visible
+	bne	skip                ; if aux visible, that's it
+.repeat 12, I
+	lda	update+120+(I*10),x
+	sta	PPU_DATA            ; otherwise do the other 12
+.endrepeat
+
+skip:
+	dex
+	bmi	done
+	jmp	next_update ; long bpl (can't jump over unrolled loop)
+
+done:
+	lda	#4             ; assume no aux is visible and the
+	ldx	is_aux_visible ; resulting Y scroll should be 4
+	beq	return
+	lda	#0             ; otherwise it's (0, 0)
+return:
+	rts
+.endproc
 
 ;
 ; uint8_t arr_get_update_speed(void);
