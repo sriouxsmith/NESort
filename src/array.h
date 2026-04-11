@@ -21,6 +21,7 @@ void arr_set_aux_visible(bool);
 void arr_clear_updates(void);
 void arr_update_all(void);
 void arr_push_update(uint8_t col);
+void arr_push_blank(void);
 
 uint8_t arr_read(bool aux, uint8_t i);
 void arr_write(bool aux, uint8_t val, uint8_t i);

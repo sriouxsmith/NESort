@@ -239,6 +239,14 @@ not_full:
 .endproc
 
 ;
+; void arr_push_blank(void);
+;
+.c_proc arr_push_blank
+	lda	#60
+	jmp	arr_push_update
+.endproc
+
+;
 ; uint8_t arr_read(bool aux, uint8_t i);
 ;
 .c_proc arr_read
@@ -252,10 +260,7 @@ aux:
 	lda	arr_main,x
 push_update:
 	pha	                 ; save
-
-	lda	#60
-	jsr	arr_push_update  ; stand-in for a better version of this
-
+	jsr	arr_push_blank
 	pla	                 ; get saved
 	ldx	#0
 	rts
