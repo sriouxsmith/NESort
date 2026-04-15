@@ -257,6 +257,10 @@ not_full:
 	lda	arr_main,x
 	jmp	push_update
 aux:
+	txa
+	clc
+	adc	#120
+	tax
 	lda	arr_main,x
 push_update:
 	pha	                 ; save
@@ -267,21 +271,21 @@ push_update:
 .endproc
 
 ;
-; void arr_write(bool aux, uint8_t val, uint8_t i);
+; void arr_write(bool aux, uint8_t i, uint8_t val);
 ;
 .c_proc arr_write
 	val = tmp1
 
-	tax
+	sta	val
 
 	jsr	popa
-	sta	val
+	tax
 
 	jsr	popa
 	cmp	#0
 	bne	aux
 
-	lda	tmp1
+	lda	val
 	sta	arr_main,x
 	jmp	push_update
 
