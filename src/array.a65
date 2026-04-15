@@ -18,6 +18,8 @@
 	.var	real_update_count
 	.var	update_column
 
+	.var	pitch_index
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "BUFFERS"
@@ -303,6 +305,18 @@ push_update:
 	lsr
 	lsr
 	jmp	arr_push_update
+.endproc
+
+;
+; void arr_play(uint8_t val);
+;
+.c_proc arr_play
+	cmp	#121
+	bcc	in_bounds
+	lda	#120
+in_bounds:
+	sta	pitch_index
+	rts
 .endproc
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
