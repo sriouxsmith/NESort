@@ -2,10 +2,10 @@
 #include "text.h"
 #include "array.h"
 #include "bcd.h"
+#include "distributions.h"
+#include "shuffles.h"
 
 #define NUM_OPTIONS 9
-#define NUM_DISTRIBUTIONS 5
-#define NUM_SHUFFLES 12
 
 static const char options_text[] =
 	"           OPTIONS\n"
