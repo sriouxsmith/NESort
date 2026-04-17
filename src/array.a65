@@ -3,7 +3,7 @@
 
 .importzp tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 
-.import popa
+.import popa, pusha
 .import nes_wait_frame
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
@@ -326,6 +326,36 @@ push_update:
 	lsr
 	lsr
 	jmp	arr_push_update
+.endproc
+
+;
+; int8_t arr_compare(uint8_t left, uint8_t right);
+;
+.c_proc arr_compare
+	right = tmp2
+	
+	sta	right
+	jsr	arr_play
+
+	jsr	popa
+	cmp	right
+	bcs	greater_equal
+
+	lda	#<(-1)
+	ldx	#0
+	rts
+
+greater_equal:
+	bne	greater
+
+	lda	#0
+	tax
+	rts
+
+greater:
+	lda	#1
+	ldx	#0
+	rts
 .endproc
 
 ;
