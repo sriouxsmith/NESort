@@ -269,9 +269,21 @@ loop:
 	tya
 	pha
 
-	; if the frame isn't over yet, don't do anything
+	; if the frame isn't over yet, don't do the rest
 	lda	is_frame_overrun
-	bne	abort
+	beq	continue
+
+	; if not rendering the array, we don't need to do anything
+	lda	is_arr_renderer_enabled
+	beq	abort
+
+	; otherwise, this is necessary to prevent jitter
+	lda	#0
+	sta	PPU_SCROLL
+	sta	PPU_SCROLL
+	jmp	abort
+
+continue:
 	inc	is_frame_overrun
 
 	sta	OAM_ADDR ; 0
