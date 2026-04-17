@@ -18,6 +18,21 @@
 	.var	real_update_count
 	.var	update_column
 
+	.var	a_val
+	.var	b_val
+	.var	c_val
+	.var	d_val
+
+	.var	a_height
+	.var	b_height
+	.var	c_height
+	.var	d_height
+
+	.var	a_rem
+	.var	b_rem
+	.var	c_rem
+	.var	d_rem
+
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
 .segment "BUFFERS"
@@ -332,7 +347,7 @@ push_update:
 ; int8_t arr_compare(uint8_t left, uint8_t right);
 ;
 .c_proc arr_compare
-	right = tmp2
+	right = tmp1
 	
 	sta	right
 	jsr	arr_play
@@ -356,6 +371,36 @@ greater:
 	lda	#1
 	ldx	#0
 	rts
+.endproc
+
+;
+; int8_t arr_compare_indices(bool aux, uint8_t left, uint8_t right);
+;
+.c_proc arr_compare_indices
+	right = tmp1
+	left = tmp2
+	aux = tmp3
+
+	sta	right
+
+	jsr	popa
+	sta	left
+
+	jsr	popa
+	sta	aux
+
+	jsr	pusha
+	lda	right
+	jsr	arr_read
+	sta	right
+
+	lda	aux
+	jsr	pusha
+	lda	left
+	jsr	arr_read
+	jsr	pusha
+	lda	right
+	jmp	arr_compare
 .endproc
 
 ;
@@ -436,21 +481,6 @@ return:
 .endproc
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
-
-a_val = tmp1
-b_val = tmp2
-c_val = tmp3
-d_val = tmp4
-
-a_height = ptr1
-b_height = ptr1+1
-c_height = ptr2
-d_height = ptr2+1
-
-a_rem = ptr3
-b_rem = ptr3+1
-c_rem = ptr4
-d_rem = ptr4+1
 
 .macro put_update_row i, end
 .scope
