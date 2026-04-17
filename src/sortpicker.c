@@ -1,8 +1,6 @@
 #include "sortpicker.h"
 #include "text.h"
 
-#define NUM_SORTS (sizeof(sort_text) / sizeof(const char *))
-
 static const char *const sort_text[] = {
 	"\xa0\xa0 Selection Sort            1\n"
 	"\xb0\xb0\n"
