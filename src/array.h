@@ -3,15 +3,15 @@
 
 #include "nes.h"
 
-#define MAX_LEN 120
+#define ARR_MAX_LEN 120
 
 /* Displayable */
-extern uint8_t arr_main[MAX_LEN];
-extern uint8_t arr_aux[MAX_LEN];
+extern uint8_t arr_main[ARR_MAX_LEN];
+extern uint8_t arr_aux[ARR_MAX_LEN];
 
 /* Invisible */
-extern uint8_t arr_ext0[MAX_LEN];
-extern uint8_t arr_ext1[MAX_LEN];
+extern uint8_t arr_ext0[ARR_MAX_LEN];
+extern uint8_t arr_ext1[ARR_MAX_LEN];
 
 uint8_t arr_get_update_speed(void);
 void arr_set_update_speed(uint8_t);
