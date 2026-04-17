@@ -344,6 +344,47 @@ push_update:
 .endproc
 
 ;
+; void arr_swap(bool aux, uint8_t a, uint8_t b);
+;
+.c_proc arr_swap
+	val_b = tmp2
+	val_a = tmp3
+	aux = tmp4
+
+	swap_tmp = ptr1
+
+	sta	val_b
+	jsr	popa
+	sta	val_a
+	jsr	popa
+	sta	aux
+
+	jsr	pusha
+	lda	val_a
+	jsr	arr_read
+	sta	swap_tmp
+
+	lda	aux
+	jsr	pusha
+	lda	val_b
+	jsr	arr_read
+	tax
+	lda	aux
+	jsr	pusha
+	lda	val_a
+	jsr	pusha
+	txa
+	jsr	arr_write
+
+	lda	aux
+	jsr	pusha
+	lda	val_b
+	jsr	pusha
+	lda	swap_tmp
+	jmp	arr_write
+.endproc
+
+;
 ; int8_t arr_compare(uint8_t left, uint8_t right);
 ;
 .c_proc arr_compare
