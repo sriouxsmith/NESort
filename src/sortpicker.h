@@ -3,7 +3,7 @@
 
 #include "nes.h"
 
-typedef void (*SortFunction)(uint8_t len);
+#include "sorts.h"
 
 // Returns a sort function index corresponding to the user's choice
 SortFunction sortpicker_run(void);
