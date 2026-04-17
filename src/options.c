@@ -156,8 +156,12 @@ bool options_run(Pipeline *p) {
 
 		if (buttons & NES_BUTTON_SELECT)
 			return false;
-		if (buttons & NES_BUTTON_START)
+		if (buttons & NES_BUTTON_START) {
+			p->distribute = distributions[distribution_index];
+			p->shuffle = shuffles[shuffle_index];
+
 			return true;
+		}
 
 		handle_navigation(buttons);
 		update_display(p);

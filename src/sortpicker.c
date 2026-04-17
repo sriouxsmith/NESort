@@ -537,7 +537,7 @@ SortFunction sortpicker_run(void) {
 		buttons = nes_get_new_buttons();
 
 		if (buttons & NES_BUTTON_START)
-			return (SortFunction)0;
+			return sorts[cur_index];
 
 		if (buttons & NES_BUTTON_RIGHT) {
 			++cur_index;

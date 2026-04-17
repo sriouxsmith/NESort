@@ -17,7 +17,6 @@ const uint8_t palette[] = {
 };
 
 void main(void) {
-	static SortFunction sort;
 	static Pipeline pipeline;
 	static bool is_options_init;
 
@@ -32,7 +31,7 @@ void main(void) {
 
 	while (1) {
 		nes_set_ppu_ctrl(0x18);
-		sort = sortpicker_run();
+		pipeline.sort = sortpicker_run();
 		if (!is_options_init) {
 			options_init(&pipeline);
 			is_options_init = true;
