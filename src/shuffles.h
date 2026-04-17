@@ -3,8 +3,10 @@
 
 #include "nes.h"
 
+#define NUM_SHUFFLES 12
+
 typedef void (*ShuffleFunction)(uint8_t len);
 
-#define NUM_SHUFFLES 12
+extern const ShuffleFunction shuffles[NUM_SHUFFLES];
 
 #endif
