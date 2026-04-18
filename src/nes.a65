@@ -5,7 +5,7 @@
 .include "nes.h65"
 .include "macro.h65"
 
-.importzp tmp1, sreg
+.importzp tmp1, tmp2, sreg
 
 .import popa, popax
 
@@ -194,6 +194,46 @@ loop:
 	eor	seed+3
 	sty	seed+3 ; finish rotating byte 2 into 3
 	sta	seed+0
+	ldx	#0
+	rts
+.endproc
+
+;
+; uint8_t nes_get_rand_bounded(uint8_t upper);
+;
+.c_proc nes_get_rand_bounded
+	n    = tmp1
+	mask = tmp2
+
+	sta	n
+
+	; find smallest power of two >= n
+	lda	#1
+po2_loop:
+	cmp	n
+	bcs	found
+	asl
+	jmp	po2_loop
+
+found:
+	cmp	n
+	bne	rejection_sample
+	; exact power of two--no rejection needed
+	jsr	nes_get_rand8
+	dec	n
+	and	n
+	rts
+
+rejection_sample:
+	sta	mask
+	dec	mask ; now it's a bitmask
+
+rs_loop:
+	jsr	nes_get_rand8
+	and	mask
+	cmp	n
+	bcs	rs_loop
+
 	ldx	#0
 	rts
 .endproc
