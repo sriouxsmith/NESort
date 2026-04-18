@@ -6,6 +6,7 @@
 #include "shell.h"
 #include "bubble.h"
 #include "comb.h"
+#include "gnome.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
@@ -14,7 +15,7 @@ const SortFunction sorts[] = {
 	shell_sort,
 	bubble_sort,
 	comb_sort,
-	selection_sort,
+	gnome_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
