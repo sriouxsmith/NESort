@@ -5,6 +5,7 @@
 #include "insertion.h"
 #include "shell.h"
 #include "bubble.h"
+#include "comb.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
@@ -12,7 +13,7 @@ const SortFunction sorts[] = {
 	insertion_sort,
 	shell_sort,
 	bubble_sort,
-	selection_sort,
+	comb_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
