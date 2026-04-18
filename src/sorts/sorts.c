@@ -4,13 +4,14 @@
 #include "heap.h"
 #include "insertion.h"
 #include "shell.h"
+#include "bubble.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
 	heap_sort,
 	insertion_sort,
 	shell_sort,
-	selection_sort,
+	bubble_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
