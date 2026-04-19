@@ -18,14 +18,11 @@ int8_t partition(uint8_t start, uint8_t end) {
 
 void quick_sort_main(uint8_t start, uint8_t end) {
 	uint8_t p;
-	uint8_t m;
 
 	while (start < 128 && end < 128 && start < end) {
-		m = (start + end + 1) / 2;
-
 		p = partition(start, end);
 
-		if (p >= m) {
+		if ((p - start) < (end - p)) {
 			quick_sort_main(start, p);
 			start = p + 1;
 		} else {
