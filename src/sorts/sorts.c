@@ -7,6 +7,7 @@
 #include "bubble.h"
 #include "comb.h"
 #include "gnome.h"
+#include "shaker.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
@@ -16,7 +17,7 @@ const SortFunction sorts[] = {
 	bubble_sort,
 	comb_sort,
 	gnome_sort,
-	selection_sort,
+	shaker_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
