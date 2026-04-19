@@ -10,6 +10,7 @@
 #include "shaker.h"
 #include "quick.h"
 #include "merge.h"
+#include "stooge.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
@@ -33,7 +34,7 @@ const SortFunction sorts[] = {
 	selection_sort,
 	selection_sort,
 	selection_sort,
-	selection_sort,
+	stooge_sort,
 	selection_sort,
 	selection_sort
 };
