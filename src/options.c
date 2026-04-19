@@ -55,16 +55,21 @@ const uint8_t spr_y[NUM_OPTIONS] = { 39,  47,  63,  71,  79,  95, 103, 119, 119}
 static uint8_t option_index;
 static uint8_t distribution_index;
 static uint8_t shuffle_index;
+static uint8_t seed_index;
+
+void generate_seed(Pipeline *p) {
+	p->seed = nes_get_rand8()
+		| ((uint32_t)nes_get_rand8() << 8)
+		| ((uint32_t)nes_get_rand8() << 16)
+		| ((uint32_t)nes_get_rand8() << 24);
+}
 
 void options_init(Pipeline *p) {
 	p->len = 120;
 	p->distincts = 120;
 	arr_set_aux_visible(false);
 	arr_set_update_speed(1);
-	p->seed = nes_get_rand8()
-		| ((uint32_t)nes_get_rand8() << 8)
-		| ((uint32_t)nes_get_rand8() << 16)
-		| ((uint32_t)nes_get_rand8() << 24);
+	generate_seed(p);
 }
 
 static void handle_navigation(uint8_t buttons) {
@@ -114,6 +119,7 @@ static void update_display(Pipeline *p) {
 	static uint8_t index;
 
 	index = nes_put_spr(spr_x[option_index], spr_y[option_index], 0x7f, 0, 0);
+	index = nes_put_spr(8 * seed_index + 160, 55, '_', 0, index);
 
 	bcd_from_binary(p->len, length_bcd);
 	bcd_from_binary(p->distincts, uniques_bcd);
@@ -162,6 +168,116 @@ bool options_run(Pipeline *p) {
 			p->shuffle = shuffles[shuffle_index];
 
 			return true;
+		}
+
+		switch (option_index) {
+		case 0: // length
+			if (buttons & NES_BUTTON_RIGHT) {
+				if (p->len < ARR_MAX_LEN) ++p->len;
+			} else if (buttons & NES_BUTTON_LEFT) {
+				if (p->len >= 3) --p->len;
+			} else if (buttons & NES_BUTTON_A) {
+				if (p->len >= ARR_MAX_LEN - 9)
+					p->len = ARR_MAX_LEN;
+				else p->len += 10;
+			} else if (buttons & NES_BUTTON_B) {
+				if (p->len < 12) p->len = 2;
+				else p->len -= 10;
+			}
+
+			if (p->distincts > p->len) p->distincts = p->len;
+			break;
+
+		case 1: // num distincts
+			if (buttons & NES_BUTTON_RIGHT) {
+				if (p->distincts < p->len) ++p->distincts;
+			} else if (buttons & NES_BUTTON_LEFT) {
+				if (p->distincts >= 2) --p->distincts;
+			} else if (buttons & NES_BUTTON_A) {
+				if (p->distincts >= p->len - 9)
+					p->distincts = p->len;
+				else p->distincts += 10;
+			} else if (buttons & NES_BUTTON_B) {
+				if (p->distincts < 11) p->distincts = 1;
+				else p->distincts -= 10;
+			}
+			break;
+
+		case 2: // seed
+			if (buttons & NES_BUTTON_RIGHT) {
+				if (seed_index < 7) ++seed_index;
+			} else if (buttons & NES_BUTTON_LEFT) {
+				if (seed_index >= 1) --seed_index;
+			} else if (buttons & NES_BUTTON_A) {
+				p->seed += (1ul << (4 * (7 - seed_index)));
+			} else if (buttons & NES_BUTTON_B) {
+				p->seed -= (1ul << (4 * (7 - seed_index)));
+			}
+			break;
+
+		case 3: // distribution
+			if (buttons & (NES_BUTTON_RIGHT | NES_BUTTON_A)) {
+				if (distribution_index < NUM_DISTRIBUTIONS - 1)
+					++distribution_index;
+			} else if (buttons & (NES_BUTTON_LEFT | NES_BUTTON_B)) {
+				if (distribution_index >= 1)
+					--distribution_index;
+			}
+			break;
+
+		case 4: // shuffle
+			if (buttons & (NES_BUTTON_RIGHT | NES_BUTTON_A)) {
+				if (shuffle_index < NUM_SHUFFLES - 1)
+					++shuffle_index;
+			} else if (buttons & (NES_BUTTON_LEFT | NES_BUTTON_B)) {
+				if (shuffle_index >= 1)
+					--shuffle_index;
+			}
+			break;
+
+		case 5: // show aux
+			if (buttons & (NES_BUTTON_RIGHT | NES_BUTTON_A
+				| NES_BUTTON_LEFT | NES_BUTTON_B))
+			{
+				arr_set_aux_visible(!arr_is_aux_visible());
+			}
+			break;
+
+		case 6: // speed
+			if (buttons & NES_BUTTON_RIGHT) {
+				if (arr_get_update_speed() < 100)
+					arr_set_update_speed(
+						arr_get_update_speed() + 1
+					);
+			} else if (buttons & NES_BUTTON_LEFT) {
+				if (arr_get_update_speed() >= 2)
+					arr_set_update_speed(
+						arr_get_update_speed() - 1
+					);
+			} else if (buttons & NES_BUTTON_A) {
+				if (arr_get_update_speed() >= 90)
+					arr_set_update_speed(100);
+				else arr_set_update_speed(
+					arr_get_update_speed() + 10
+				);
+			} else if (buttons & NES_BUTTON_B) {
+				if (arr_get_update_speed() < 11)
+					arr_set_update_speed(1);
+				else arr_set_update_speed(
+					arr_get_update_speed() - 10
+				);
+			}
+			break;
+
+		case 7: // reset
+			if (buttons & NES_BUTTON_A) options_init(p);
+			if (buttons & NES_BUTTON_RIGHT) ++option_index;
+			break;
+
+		case 8: // generate seed
+			if (buttons & NES_BUTTON_A) generate_seed(p);
+			if (buttons & NES_BUTTON_LEFT) --option_index;
+			break;
 		}
 
 		handle_navigation(buttons);
