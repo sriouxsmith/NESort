@@ -52,10 +52,6 @@ static const struct {
 const uint8_t spr_x[NUM_OPTIONS] = {144, 144, 144, 144, 144, 144, 144,   8,  88};
 const uint8_t spr_y[NUM_OPTIONS] = { 39,  47,  63,  71,  79,  95, 103, 119, 119};
 
-static uint8_t length_bcd[3];
-static uint8_t uniques_bcd[3];
-static uint8_t speed_bcd[3];
-
 static uint8_t option_index;
 static uint8_t distribution_index;
 static uint8_t shuffle_index;
@@ -111,8 +107,17 @@ static uint8_t draw_symbol(uint8_t left, uint8_t right, uint8_t y, uint8_t index
 }
 
 static void update_display(Pipeline *p) {
+	static uint8_t length_bcd[3];
+	static uint8_t uniques_bcd[3];
+	static uint8_t speed_bcd[3];
+
 	static uint8_t index;
+
 	index = nes_put_spr(spr_x[option_index], spr_y[option_index], 0x7f, 0, 0);
+
+	bcd_from_binary(p->len, length_bcd);
+	bcd_from_binary(p->distincts, uniques_bcd);
+	bcd_from_binary(arr_get_update_speed(), speed_bcd);
 
 	index = bcd_render_as_spr(160, 39, index, 3, length_bcd);
 	index = bcd_render_as_spr(160, 47, index, 3, uniques_bcd);
@@ -144,10 +149,6 @@ bool options_run(Pipeline *p) {
 	static uint8_t buttons;
 
 	text_wait_write(options_text);
-
-	bcd_from_binary(p->len, length_bcd);
-	bcd_from_binary(p->distincts, uniques_bcd);
-	bcd_from_binary(arr_get_update_speed(), speed_bcd);
 
 	while (1) {
 		(void)nes_get_rand8();
