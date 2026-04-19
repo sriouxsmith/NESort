@@ -4,7 +4,7 @@
 .importzp tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 
 .import popa, pusha
-.import nes_wait_frame
+.import nes_wait_frame, nes_get_new_buttons
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
@@ -251,7 +251,8 @@ run_with_aux:
 	jsr	update_with_aux
 pass:
 	jsr	nes_wait_frame
-	jmp	arr_clear_updates
+	jsr	arr_clear_updates
+	jmp	nes_get_new_buttons
 .endproc
 
 ;
