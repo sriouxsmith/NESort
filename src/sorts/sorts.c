@@ -11,6 +11,8 @@
 #include "quick.h"
 #include "merge.h"
 #include "stooge.h"
+#include "slow.h"
+#include "bogo.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
@@ -35,6 +37,6 @@ const SortFunction sorts[] = {
 	selection_sort,
 	selection_sort,
 	stooge_sort,
-	selection_sort,
-	selection_sort
+	slow_sort,
+	bogo_sort
 };
