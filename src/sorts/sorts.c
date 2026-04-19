@@ -9,6 +9,7 @@
 #include "gnome.h"
 #include "shaker.h"
 #include "quick.h"
+#include "merge.h"
 
 const SortFunction sorts[] = {
 	selection_sort,
@@ -20,7 +21,7 @@ const SortFunction sorts[] = {
 	gnome_sort,
 	shaker_sort,
 	quick_sort,
-	selection_sort,
+	merge_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
