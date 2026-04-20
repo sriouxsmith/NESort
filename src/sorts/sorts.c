@@ -10,6 +10,7 @@
 #include "shaker.h"
 #include "quick.h"
 #include "merge.h"
+#include "intro.h"
 #include "stooge.h"
 #include "slow.h"
 #include "bogo.h"
@@ -25,7 +26,7 @@ const SortFunction sorts[] = {
 	shaker_sort,
 	quick_sort,
 	merge_sort,
-	selection_sort,
+	intro_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
