@@ -11,11 +11,14 @@ void shell_sort(uint8_t len) {
 		kx = gaps[k];
 		if (kx >= len) continue;
 		for (j = kx; j < len; ++j) {
-			for (i = j - kx; i < len; i -= kx) {
-				if (arr_compare_indices(false, i, i + kx) <= 0)
+			uint8_t e = arr_read(false, j);
+			for (i = j; i >= kx; i -= kx) {
+				if (arr_compare(e, arr_read(false, i - kx)) >= 0)
 					break;
-				arr_swap(false, i, i + kx);
+				arr_write(false, i, arr_read(false, i - kx));
 			}
+
+			arr_write(false, i, e);
 		}
 	}
 }
