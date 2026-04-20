@@ -433,6 +433,7 @@ push_update:
 	
 	sta	right
 	jsr	arr_play
+	jsr	arr_push_blank
 
 	jsr	popa
 	cmp	right
