@@ -2,13 +2,14 @@
 
 #include "../array.h"
 
-int8_t partition(uint8_t start, uint8_t end) {
+static int8_t partition(uint8_t start, uint8_t end) {
 	uint8_t i = start - 1;
 	uint8_t j = end + 1;
+	uint8_t e = arr_read(false, (start + end) / 2);
 
 	while (1) {
-		do { ++i; } while (arr_compare_indices(false, i, start) < 0);
-		do { --j; } while (arr_compare_indices(false, j, start) > 0);
+		do { ++i; } while (arr_compare(arr_read(false, i), e) < 0);
+		do { --j; } while (arr_compare(arr_read(false, j), e) > 0);
 
 		if (i >= j) return j;
 
@@ -16,7 +17,7 @@ int8_t partition(uint8_t start, uint8_t end) {
 	}
 }
 
-void quick_sort_main(uint8_t start, uint8_t end) {
+static void quick_sort_main(uint8_t start, uint8_t end) {
 	uint8_t p;
 
 	while (start < 128 && end < 128 && start < end) {
