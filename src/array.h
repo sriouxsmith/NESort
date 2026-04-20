@@ -22,6 +22,7 @@ void arr_clear_updates(void);
 void arr_update_all(void);
 void arr_push_update(uint8_t col);
 void arr_push_blank(void);
+void arr_mark(bool aux, uint8_t i);
 
 uint8_t arr_read(bool aux, uint8_t i);
 int8_t arr_compare(uint8_t left, uint8_t right);

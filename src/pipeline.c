@@ -29,13 +29,12 @@ static void check(uint8_t len) {
 }
 
 void pipeline_run(Pipeline *p) {
-	static bool is_aux_visible_save;
 	static uint8_t update_speed_save;
 	static uint8_t i;
 
 	// set stage
 	text_wait_write("");
-	nes_set_ppu_ctrl(0);
+	nes_set_ppu_ctrl(0x08);
 	nes_set_arr_renderer_enabled(true);
 
 	// clean state

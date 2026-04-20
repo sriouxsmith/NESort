@@ -4,7 +4,9 @@
 .importzp tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 
 .import popa, pusha
-.import nes_wait_frame, nes_get_new_buttons
+.import nes_wait_frame, nes_get_new_buttons, nes_put_spr, nes_hide_spr
+
+NUM_MARKERS = 10
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
@@ -32,6 +34,14 @@
 	.var	b_rem
 	.var	c_rem
 	.var	d_rem
+
+	.var	markers, NUM_MARKERS
+	.var	marker_sp
+
+	.var	draw_markers_index
+	.var	draw_markers_v_offs
+
+	.var	spr_index
 
 ;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@;
 
@@ -246,12 +256,18 @@ loop:
 	lda	is_aux_visible
 	bne	run_with_aux
 	jsr	update_no_aux
+	jsr	draw_markers
 	jmp	pass
 run_with_aux:
 	jsr	update_with_aux
+	jsr	draw_markers_aux
 pass:
 	jsr	nes_wait_frame
 	jsr	arr_clear_updates
+	lda	#NUM_MARKERS-1
+	sta	marker_sp
+	lda	#0
+	sta	spr_index
 	jmp	nes_get_new_buttons
 .endproc
 
@@ -286,6 +302,28 @@ not_full:
 .endproc
 
 ;
+; void arr_mark(bool aux, uint8_t i);
+;
+.c_proc arr_mark
+	tax
+	jsr	popa
+	cmp	#0
+	beq	on_main
+
+	txa
+	clc
+	adc	#120 ; mark aux index
+	tax
+
+on_main:
+	ldy	marker_sp
+	stx	markers,y
+	dey
+	sty	marker_sp
+	rts
+.endproc
+
+;
 ; uint8_t arr_read(bool aux, uint8_t i);
 ;
 .c_proc arr_read
@@ -300,8 +338,10 @@ aux:
 	clc
 	adc	#120
 	tax
+
 	lda	arr_main,x
 push_update:
+	jsr	arr_mark::on_main
 	pha	                 ; save
 	jsr	arr_push_blank
 	pla	                 ; get saved
@@ -731,4 +771,114 @@ in_bounds:
 
 end:
 	rts
+.endproc
+
+.proc draw_markers
+	lda	#NUM_MARKERS-1
+	sta	draw_markers_index
+	
+loop:
+	ldx	draw_markers_index
+	cpx	marker_sp
+	beq	end
+
+	lda	markers,x
+	cmp	#120
+	bcs	next
+
+	tax
+
+	asl
+	clc
+	adc	#7
+	jsr	pusha
+
+	lda	arr_main,x
+	tax
+
+	lda	#27
+	sec
+	sbc	tile_height,x
+	asl
+	asl
+	sbc	part_height,x
+	asl
+	sec
+	sbc	#2
+	jsr	pusha
+	lda	#1
+	jsr	pusha
+	lda	#3
+	jsr	pusha
+	lda	spr_index
+	jsr	nes_put_spr
+	sta	spr_index
+
+next:
+	dec	draw_markers_index
+	jmp	loop
+
+end:
+	lda	spr_index
+	jmp	nes_hide_spr
+.endproc
+
+.proc draw_markers_aux
+	lda	#NUM_MARKERS-1
+	sta	draw_markers_index
+	
+loop:
+	ldx	draw_markers_index
+	cpx	marker_sp
+	beq	end
+
+	ldy	#0
+
+	lda	markers,x
+	cmp	#120
+	bcc	not_aux
+
+	clc
+	sbc	#120
+
+	ldy	#12
+not_aux:
+	sty	draw_markers_v_offs
+	tax
+
+	asl
+	clc
+	adc	#7
+	jsr	pusha
+
+	lda	arr_main,x
+	tax
+
+	lda	#15
+	clc
+	adc	draw_markers_v_offs
+	sec
+	sbc	tile_height_aux,x
+	asl
+	asl
+	sbc	part_height_aux,x
+	asl
+	sec
+	sbc	#2
+	jsr	pusha
+	lda	#1
+	jsr	pusha
+	lda	#3
+	jsr	pusha
+	lda	spr_index
+	jsr	nes_put_spr
+	sta	spr_index
+
+next:
+	dec	draw_markers_index
+	jmp	loop
+
+end:
+	lda	spr_index
+	jmp	nes_hide_spr
 .endproc
