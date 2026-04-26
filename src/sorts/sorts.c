@@ -11,6 +11,7 @@
 #include "quick.h"
 #include "merge.h"
 #include "intro.h"
+#include "counting.h"
 #include "bitonic.h"
 #include "stooge.h"
 #include "slow.h"
@@ -29,7 +30,7 @@ const SortFunction sorts[] = {
 	merge_sort,
 	intro_sort,
 	selection_sort,
-	selection_sort,
+	counting_sort,
 	selection_sort,
 	selection_sort,
 	selection_sort,
