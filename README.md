@@ -24,7 +24,7 @@ A sorting visualizer... for the NES/Famicom.
 18. ~~Pancake Sort~~
 19. Bitonic Merge Sort (iterative)
 20. ~~Ford-Johnson Algorithm (merge-insertion sort)~~
-21. ~~Block Merge Sort (WikiSort)
+21. ~~Block Merge Sort (WikiSort)~~
 22. Stooge Sort
 23. Slow Sort
 24. Bogo Sort
@@ -33,7 +33,7 @@ A sorting visualizer... for the NES/Famicom.
 
 ## Usage
 
-Pre-built binaries coming soon...
+Pre-built binary: [Latest release](https://github.com/sriouxsmith/NESort/releases)
 
 [Mesen](https://www.mesen.ca/) is the recommended emulator
 due to its accuracy and compatibility with the generated
